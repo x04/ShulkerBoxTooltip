@@ -11,19 +11,19 @@ import java.util.function.Supplier;
 /**
  * A {@link BlockEntityPreviewProvider} that uses a {@link BlockEntity} instance to get its information.
  */
-public class BlockEntityAwarePreviewRenderer<BE extends BlockEntity & Inventory> extends BlockEntityPreviewProvider {
+public class BlockEntityAwarePreviewProvider<B extends BlockEntity & Inventory> extends BlockEntityPreviewProvider {
 
-  private final Supplier<? extends BE> blockEntityFactory;
+  private final Supplier<? extends B> blockEntityFactory;
 
-  private final ThreadLocal<BE> cachedBlockEntity = ThreadLocal.withInitial(() -> null);
+  private final ThreadLocal<B> cachedBlockEntity = ThreadLocal.withInitial(() -> null);
 
-  public BlockEntityAwarePreviewRenderer(int maxRowSize, Supplier<? extends BE> blockEntityFactory) {
+  public BlockEntityAwarePreviewProvider(int maxRowSize, Supplier<? extends B> blockEntityFactory) {
     super(27, false, maxRowSize);
     this.blockEntityFactory = blockEntityFactory;
   }
 
-  private BE getBlockEntity() {
-    BE be = this.cachedBlockEntity.get();
+  private B getBlockEntity() {
+    B be = this.cachedBlockEntity.get();
     if (be == null) {
       be = this.blockEntityFactory.get();
       this.cachedBlockEntity.set(be);
