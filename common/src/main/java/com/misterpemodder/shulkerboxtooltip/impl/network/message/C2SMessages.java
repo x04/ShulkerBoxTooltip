@@ -44,10 +44,11 @@ public final class C2SMessages {
    * Sends a handshake packet to the server, if possible.
    */
   public static void attemptHandshake() {
-    if (ShulkerBoxTooltip.config.preview.serverIntegration && ClientNetworking.serverProtocolVersion == null
-        && C2SMessages.HANDSHAKE_START.canSendToServer()) {
-      ShulkerBoxTooltip.LOGGER.info("Server integration enabled, attempting handshake...");
-      C2SMessages.HANDSHAKE_START.sendToServer(new C2SHandshakeStart(ProtocolVersion.CURRENT));
-    }
+    // TODO: update networking code
+//    if (ShulkerBoxTooltip.config.preview.serverIntegration && ClientNetworking.serverProtocolVersion == null
+//        && C2SMessages.HANDSHAKE_START.canSendToServer()) {
+//      ShulkerBoxTooltip.LOGGER.info("Server integration enabled, attempting handshake...");
+//      C2SMessages.HANDSHAKE_START.sendToServer(new C2SHandshakeStart(ProtocolVersion.CURRENT));
+//    }
   }
 }

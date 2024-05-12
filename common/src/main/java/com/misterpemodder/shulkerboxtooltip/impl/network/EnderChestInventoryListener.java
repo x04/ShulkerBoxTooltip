@@ -21,7 +21,8 @@ public final class EnderChestInventoryListener implements InventoryChangedListen
       detachFrom(this.player);
       return;
     }
-    S2CMessages.ENDER_CHEST_UPDATE.sendTo(this.player, S2CEnderChestUpdate.create((EnderChestInventory) inv));
+    S2CMessages.ENDER_CHEST_UPDATE.sendTo(this.player,
+        S2CEnderChestUpdate.create((EnderChestInventory) inv, this.player.getRegistryManager()));
   }
 
   /**

@@ -8,6 +8,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipComponent;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData;
 import com.mojang.datafixers.util.Either;
+import java.util.List;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.text.StringVisitable;
 import net.minecraftforge.api.distmarker.Dist;

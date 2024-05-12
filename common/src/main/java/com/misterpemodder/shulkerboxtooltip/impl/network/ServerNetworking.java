@@ -43,7 +43,8 @@ public class ServerNetworking {
     Configuration.EnderChestSyncType ecSyncType = ShulkerBoxTooltip.config.server.enderChestSyncType;
 
     if (ecSyncType != Configuration.EnderChestSyncType.NONE)
-      S2CMessages.ENDER_CHEST_UPDATE.sendTo(client, S2CEnderChestUpdate.create(client.getEnderChestInventory()));
+      S2CMessages.ENDER_CHEST_UPDATE.sendTo(client,
+          S2CEnderChestUpdate.create(client.getEnderChestInventory(), client.getRegistryManager()));
     if (ecSyncType == Configuration.EnderChestSyncType.ACTIVE)
       EnderChestInventoryListener.attachTo(client);
   }

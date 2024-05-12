@@ -37,11 +37,23 @@ public class MergedItemStack implements Comparable<MergedItemStack> {
     if (slot < this.firstSlot)
       this.firstSlot = slot;
     if (this.merged.isEmpty()) {
-      this.merged = stack.copy();
-      if (mergingStrategy == ItemStackMergingStrategy.IGNORE)
-        this.merged.setNbt(null);
+      if (mergingStrategy == ItemStackMergingStrategy.IGNORE) {
+        this.merged = copyStackWithoutComponents(stack);
+      } else {
+        this.merged = stack.copy();
+      }
     } else {
       this.merged.increment(stack.getCount());
+    }
+  }
+
+  private static ItemStack copyStackWithoutComponents(ItemStack stack) {
+    if (stack.isEmpty()) {
+      return ItemStack.EMPTY;
+    } else {
+      var copy = new ItemStack(stack.getItem(), stack.getCount());
+      copy.setBobbingAnimationTime(stack.getBobbingAnimationTime());
+      return copy;
     }
   }
 

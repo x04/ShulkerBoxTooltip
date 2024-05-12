@@ -25,19 +25,22 @@ public final class ServerNetworkingImpl {
    * Implements {@link ServerNetworking#createS2CPacket(Identifier, PacketByteBuf)}.
    */
   public static Packet<?> createS2CPacket(Identifier channelId, PacketByteBuf buf) {
-    return ServerPlayNetworking.createS2CPacket(channelId, buf);
+    // TODO: update networking code
+    // return ServerPlayNetworking.createS2CPacket(channelId, buf);
+    throw new UnsupportedOperationException("Not implemented");
   }
 
   /**
    * Implements {@link ServerNetworking#init()}.
    */
   public static void init() {
-    if (!ShulkerBoxTooltip.config.server.clientIntegration)
-      return;
-    S2CMessages.init();
-    C2SMessages.init();
-    ServerPlayConnectionEvents.INIT.register((handler, server) -> C2SMessages.registerAllFor(handler.player));
-    ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> ServerNetworking.removeClient(handler.player));
+    // TODO: update networking code
+    // if (!ShulkerBoxTooltip.config.server.clientIntegration)
+    //   return;
+    // S2CMessages.init();
+    // C2SMessages.init();
+    // ServerPlayConnectionEvents.INIT.register((handler, server) -> C2SMessages.registerAllFor(handler.player));
+    // ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> ServerNetworking.removeClient(handler.player));
   }
 
   /**
@@ -45,14 +48,16 @@ public final class ServerNetworkingImpl {
    */
   public static void registerC2SReceiver(Identifier channelId, ServerPlayerEntity player,
       ServerNetworking.PacketReceiver receiver) {
-    ServerPlayNetworkHandler handler = player.networkHandler;
-
-    if (handler == null) {
-      ShulkerBoxTooltip.LOGGER.error("Cannot register packet receiver for " + channelId + ", player is not in game");
-      return;
-    }
-    ServerPlayNetworking.registerReceiver(handler, channelId,
-        (server, player1, handler1, buf, responseSender) -> receiver.handle(player1, buf));
+    // TODO: update networking code
+//    ServerPlayNetworkHandler handler = player.networkHandler;
+//
+//    if (handler == null) {
+//      ShulkerBoxTooltip.LOGGER.error("Cannot register packet receiver for " + channelId + ", player is not in game");
+//      return;
+//    }
+//    ServerPlayNetworking.registerReceiver(handler, channelId,
+//        (server, player1, handler1, buf, responseSender) -> receiver.handle(player1, buf));
+    throw new UnsupportedOperationException("Not implemented");
   }
 
   /**

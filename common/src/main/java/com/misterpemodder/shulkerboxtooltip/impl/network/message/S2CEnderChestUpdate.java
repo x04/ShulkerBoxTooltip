@@ -7,6 +7,7 @@ import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.RegistryWrapper;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -17,8 +18,8 @@ import java.util.Objects;
  * @param nbtInventory NBT-serialized ender chest inventory.
  */
 public record S2CEnderChestUpdate(@Nullable NbtList nbtInventory) {
-  public static S2CEnderChestUpdate create(EnderChestInventory inventory) {
-    return new S2CEnderChestUpdate(inventory.toNbtList());
+  public static S2CEnderChestUpdate create(EnderChestInventory inventory, RegistryWrapper.WrapperLookup registries) {
+    return new S2CEnderChestUpdate(inventory.toNbtList(registries));
   }
 
   public static class Type implements MessageType<S2CEnderChestUpdate> {
@@ -45,9 +46,10 @@ public record S2CEnderChestUpdate(@Nullable NbtList nbtInventory) {
         return;
 
       MinecraftClient.getInstance().execute(() -> {
-        if (MinecraftClient.getInstance().player != null)
-          MinecraftClient.getInstance().player.getEnderChestInventory().readNbtList(
-              message.nbtInventory);
+        if (MinecraftClient.getInstance().player != null) {
+          var player = MinecraftClient.getInstance().player;
+          player.getEnderChestInventory().readNbtList(message.nbtInventory, player.getRegistryManager());
+        }
       });
     }
   }

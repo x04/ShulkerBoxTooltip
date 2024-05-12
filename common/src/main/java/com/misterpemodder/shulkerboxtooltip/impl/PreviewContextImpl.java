@@ -37,7 +37,7 @@ public record PreviewContextImpl(ItemStack stack, @Nullable PlayerEntity owner, 
     @Override
     public PreviewContext build() {
       if (this.registryLookup == null && this.owner != null) {
-        this.registryLookup = this.owner.getWorld() != null ? this.owner.getWorld().getRegistryManager() : null;
+        this.registryLookup = this.owner.getRegistryManager();
       }
       return new PreviewContextImpl(this.stack, this.owner, ShulkerBoxTooltip.config, this.registryLookup);
     }

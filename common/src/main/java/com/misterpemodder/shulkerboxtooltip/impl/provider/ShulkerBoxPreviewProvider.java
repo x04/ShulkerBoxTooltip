@@ -9,8 +9,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
@@ -60,17 +60,14 @@ public class ShulkerBoxPreviewProvider extends InventoryAwarePreviewProvider<Shu
   @Override
   public List<Text> addTooltip(PreviewContext context) {
     ItemStack stack = context.stack();
-    NbtCompound compound = stack.getNbt();
 
-    if (this.canUseLootTables() && compound != null && compound.contains("BlockEntityTag", 10)) {
-      NbtCompound blockEntityTag = compound.getCompound("BlockEntityTag");
+    // Restore the vanilla behavior of adding question marks to the tooltip when the item has a loot table
+    if (this.canUseLootTables()
+        && ShulkerBoxTooltip.config.tooltip.lootTableInfoType == Configuration.LootTableInfoType.HIDE && stack.contains(
+        DataComponentTypes.CONTAINER_LOOT)) {
+      Style style = Style.EMPTY.withColor(Formatting.GRAY);
 
-      if (blockEntityTag != null && blockEntityTag.contains("LootTable", 8)
-          && ShulkerBoxTooltip.config.tooltip.lootTableInfoType == Configuration.LootTableInfoType.HIDE) {
-        Style style = Style.EMPTY.withColor(Formatting.GRAY);
-
-        return Collections.singletonList(Text.literal("???????").setStyle(style));
-      }
+      return Collections.singletonList(Text.literal("???????").setStyle(style));
     }
     return super.addTooltip(context);
   }

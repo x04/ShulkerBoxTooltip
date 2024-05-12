@@ -49,7 +49,7 @@ public class VanillaPreviewRenderer extends BasePreviewRenderer {
 
     context.drawGuiTexture(texture, x, y, this.getColumnsWidth(), this.getHeight());
 
-    var sprite = BundleTooltipComponent.Sprite.SLOT;
+    var sprite = BundleTooltipComponent.SlotSprite.SLOT;
     for (int slotY = 0; slotY < this.getRowCount(); ++slotY) {
       for (int slotX = 0; slotX < this.getColumnCount(); ++slotX) {
         int px = x + slotX * 18 + 1;

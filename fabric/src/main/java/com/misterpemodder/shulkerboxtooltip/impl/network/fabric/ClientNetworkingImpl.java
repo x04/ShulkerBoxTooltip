@@ -25,18 +25,21 @@ public class ClientNetworkingImpl extends ClientNetworking {
    * Implements {@link ClientNetworking#createC2SPacket(Identifier, PacketByteBuf)}.
    */
   public static Packet<?> createC2SPacket(Identifier channelId, PacketByteBuf buf) {
-    return ClientPlayNetworking.createC2SPacket(channelId, buf);
+    // TODO: update networking code
+    // return ClientPlayNetworking.createC2SPacket(channelId, buf);
+    throw new UnsupportedOperationException("Not implemented");
   }
 
   /**
    * Implements {@link ClientNetworking#init()}.
    */
   public static void init() {
-    if (ShulkerBoxTooltip.config.preview.serverIntegration) {
-      C2SMessages.init();
-      ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CMessages.registerAll());
-      ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> C2SMessages.onDisconnectFromServer());
-    }
+    // TODO: update networking code
+//    if (ShulkerBoxTooltip.config.preview.serverIntegration) {
+//      C2SMessages.init();
+//      ClientPlayConnectionEvents.INIT.register((handler, client) -> S2CMessages.registerAll());
+//      ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> C2SMessages.onDisconnectFromServer());
+//    }
     ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> ClientNetworking.onJoinServer(client));
   }
 
@@ -44,7 +47,9 @@ public class ClientNetworkingImpl extends ClientNetworking {
    * Implements {@link ClientNetworking#registerS2CReceiver(Identifier, PacketReceiver)} ()}.
    */
   public static void registerS2CReceiver(Identifier channelId, PacketReceiver receiver) {
-    ClientPlayNetworking.registerReceiver(channelId, (client, handler, buf, responseSender) -> receiver.handle(buf));
+    // TODO: update networking code
+    // ClientPlayNetworking.registerReceiver(channelId, (client, handler, buf, responseSender) -> receiver.handle(buf));
+    throw new UnsupportedOperationException("Not implemented");
   }
 
   /**

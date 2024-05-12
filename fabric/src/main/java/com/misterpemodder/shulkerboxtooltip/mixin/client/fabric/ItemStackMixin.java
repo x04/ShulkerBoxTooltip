@@ -4,9 +4,10 @@ import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,19 +21,21 @@ import java.util.Optional;
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
   @Inject(at = @At("HEAD"), method = "getTooltipData()Ljava/util/Optional;", cancellable = true)
-  private void onGetTooltipData(CallbackInfoReturnable<Optional<TooltipData>> ci) {
+  private void onGetTooltipData(CallbackInfoReturnable<Optional<TooltipData>> cir) {
     PreviewContext context = PreviewContext.builder((ItemStack) (Object) this).withOwner(
         ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player).build();
 
+    //noinspection UnreachableCode
     if (ShulkerBoxTooltipApi.isPreviewAvailable(context))
-      ci.setReturnValue(Optional.of(
+      cir.setReturnValue(Optional.of(
           new PreviewTooltipData(ShulkerBoxTooltipApi.getPreviewProviderForStack(context.stack()), context)));
   }
 
-  @Inject(at = @At("RETURN"), method = "Lnet/minecraft/item/ItemStack;getTooltip"
-      + "(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipContext;)Ljava/util/List;")
-  private void onGetTooltip(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> ci) {
-    var tooltip = ci.getReturnValue();
+  @Inject(at = @At("RETURN"), method = "getTooltip(Lnet/minecraft/item/Item$TooltipContext;"
+      + "Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/client/item/TooltipType;)Ljava/util/List;")
+  private void onGetTooltip(Item.TooltipContext context, PlayerEntity player, TooltipType type,
+      CallbackInfoReturnable<List<Text>> cir) {
+    var tooltip = cir.getReturnValue();
     ShulkerBoxTooltipClient.modifyStackTooltip((ItemStack) (Object) this, tooltip::addAll);
   }
 }

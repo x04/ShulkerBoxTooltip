@@ -1,8 +1,8 @@
 package com.misterpemodder.shulkerboxtooltip.impl.util;
 
+import net.minecraft.component.ComponentMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 
 import java.util.Objects;
@@ -13,19 +13,19 @@ import java.util.Objects;
 public class ItemKey {
   private final Item item;
   private final int id;
-  private final NbtCompound data;
-  private final boolean ignoreData;
+  private final ComponentMap components;
+  private final boolean ignoreComponents;
 
-  public ItemKey(ItemStack stack, boolean ignoreData) {
+  public ItemKey(ItemStack stack, boolean ignoreComponents) {
     this.item = stack.getItem();
     this.id = Registries.ITEM.getRawId(this.item);
-    this.data = stack.getNbt();
-    this.ignoreData = ignoreData;
+    this.components = stack.getComponents();
+    this.ignoreComponents = ignoreComponents;
   }
 
   @Override
   public int hashCode() {
-    return 31 * id + (this.ignoreData || data == null ? 0 : data.hashCode());
+    return 31 * id + (this.ignoreComponents || components == null ? 0 : components.hashCode());
   }
 
   @Override
@@ -35,7 +35,7 @@ public class ItemKey {
     if (!(other instanceof ItemKey key))
       return false;
 
-    return key.item == this.item && key.id == this.id
-        && (this.ignoreData || Objects.equals(key.data, this.data));
+    return key.item == this.item && key.id == this.id && (this.ignoreComponents || Objects.equals(key.components,
+        this.components));
   }
 }

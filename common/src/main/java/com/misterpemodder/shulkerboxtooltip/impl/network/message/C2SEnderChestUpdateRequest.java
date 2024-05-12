@@ -21,7 +21,8 @@ public record C2SEnderChestUpdateRequest() {
     @Override
     public void onReceive(C2SEnderChestUpdateRequest message, MessageContext<C2SEnderChestUpdateRequest> context) {
       var player = (ServerPlayerEntity) context.getPlayer();
-      S2CMessages.ENDER_CHEST_UPDATE.sendTo(player, S2CEnderChestUpdate.create(player.getEnderChestInventory()));
+      S2CMessages.ENDER_CHEST_UPDATE.sendTo(player,
+          S2CEnderChestUpdate.create(player.getEnderChestInventory(), player.getRegistryManager()));
     }
   }
 }
