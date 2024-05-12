@@ -114,6 +114,7 @@ public class ModPreviewRenderer extends BasePreviewRenderer {
       return;
     RenderSystem.enableDepthTest();
     this.drawBackground(x, y, context);
+    this.drawSlotHighlight(x, y, context, mouseX, mouseY);
     this.drawItems(x, y, context, textRenderer);
     this.drawInnerTooltip(x, y, context, textRenderer, mouseX, mouseY);
   }

@@ -10,6 +10,7 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
@@ -78,22 +79,33 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
   }
 
   /**
+   * Get the slot id at the given coordinates if X and Y are in bounds of the preview window
+   *
+   * @return The slot id at the given coordinates, or -1 if not found.
+   */
+  private int getSlotAt(int x, int y) {
+    int slot = -1;
+
+    // Get the slot id at the given coordinates if X and Y are in bounds of the preview window
+    if (x + 1 >= this.slotXOffset && y + 1 >= this.slotYOffset) {
+      int maxRowSize = this.getMaxRowSize();
+      int slotX = (x + 1 - this.slotXOffset) / this.slotWidth;
+      int slotY = (y + 1 - this.slotYOffset) / this.slotHeight;
+
+      if (slotX < maxRowSize)
+        slot = slotX + slotY * maxRowSize;
+    }
+
+    return slot;
+  }
+
+  /**
    * @param x Top-left corner X coordinate of the preview window
    * @param y Top-left corner Y coordinate of the preview window
    * @return The item stack at the given coordinates, or {@link ItemStack#EMPTY} if not found.
    */
   private ItemStack getStackAt(int x, int y) {
-    int slot = -1;
-
-    // Get the slot id at the given coordinates if X and Y are in bounds of the preview window
-    if (x > this.slotXOffset && y > this.slotYOffset) {
-      int maxRowSize = this.getMaxRowSize();
-      int slotX = (x - this.slotXOffset) / this.slotWidth;
-      int slotY = (y - this.slotYOffset) / this.slotHeight;
-
-      if (slotX < maxRowSize)
-        slot = slotX + slotY * maxRowSize;
-    }
+    int slot = this.getSlotAt(x, y);
 
     if (this.previewType == PreviewType.COMPACT) {
       if (slot < 0 || slot >= this.items.size())
@@ -157,5 +169,18 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
 
     if (!stack.isEmpty())
       context.drawItemTooltip(textRenderer, stack, mouseX, mouseY);
+  }
+
+  protected void drawSlotHighlight(int x, int y, DrawContext context, int mouseX, int mouseY) {
+    int slot = this.getSlotAt(mouseX - x, mouseY - y);
+
+    if (slot >= 0 && slot < this.getInvSize()) {
+      int maxRowSize = this.getMaxRowSize();
+
+      x = this.slotXOffset + x + this.slotWidth * (slot % maxRowSize);
+      y = this.slotYOffset + y + this.slotHeight * (slot / maxRowSize);
+
+      HandledScreen.drawSlotHighlight(context, x, y, 1000);
+    }
   }
 }
