@@ -188,7 +188,7 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
       x = this.slotXOffset + x + this.slotWidth * (slot % maxRowSize);
       y = this.slotYOffset + y + this.slotHeight * (slot / maxRowSize);
 
-      HandledScreen.drawSlotHighlight(context, x, y, 1000);
+      HandledScreen.drawSlotHighlight(context, x, y, 0);
     }
   }
 }

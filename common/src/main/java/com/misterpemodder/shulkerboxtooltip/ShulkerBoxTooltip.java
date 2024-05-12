@@ -7,10 +7,7 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry
 import com.misterpemodder.shulkerboxtooltip.impl.config.Configuration;
 import com.misterpemodder.shulkerboxtooltip.impl.config.ConfigurationHandler;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
-import com.misterpemodder.shulkerboxtooltip.impl.provider.BlockEntityAwarePreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.impl.provider.EnderChestPreviewProvider;
-import com.misterpemodder.shulkerboxtooltip.impl.provider.FixedPreviewProviderRegistry;
-import com.misterpemodder.shulkerboxtooltip.impl.provider.ShulkerBoxPreviewProvider;
+import com.misterpemodder.shulkerboxtooltip.impl.provider.*;
 import com.misterpemodder.shulkerboxtooltip.impl.util.NamedLogger;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -70,7 +67,7 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
         .register("red_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.RED_SHULKER_BOX)
         .register("black_shulker_box", 9, ShulkerBoxBlockEntity::new, Blocks.BLACK_SHULKER_BOX);
 
-    new FixedPreviewProviderRegistry<>(registry, BlockEntityAwarePreviewProvider::new)
+    new FixedPreviewProviderRegistry<>(registry, InventoryAwarePreviewProvider::new)
         .register("chest", 9, ChestBlockEntity::new, Blocks.CHEST)
         .register("trapped_chest", 9, TrappedChestBlockEntity::new, Blocks.CHEST)
         .register("barrel", 9, BarrelBlockEntity::new, Blocks.BARREL)
@@ -80,7 +77,14 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
         .register("dropper", 3, DropperBlockEntity::new, Blocks.DROPPER)
         .register("dispenser", 3, DispenserBlockEntity::new, Blocks.DISPENSER)
         .register("hopper", 5, HopperBlockEntity::new, Blocks.HOPPER)
-        .register("brewing_stand", 7, BrewingStandBlockEntity::new, Blocks.BREWING_STAND);
+        .register("brewing_stand", 7, BrewingStandBlockEntity::new, Blocks.BREWING_STAND)
+        .register("chiseled_bookshelf", 3, ChiseledBookshelfBlockEntity::new, Blocks.CHISELED_BOOKSHELF);
+
+    new FixedPreviewProviderRegistry<>(registry, DecoratedPotPreviewProvider::new)
+        .register("decorated_pot", 1, DecoratedPotBlockEntity::new, Blocks.DECORATED_POT);
+
+    new FixedPreviewProviderRegistry<>(registry, LecternPreviewProvider::new)
+        .register("lectern", 1, (pos, state) -> new LecternBlockEntity(pos, state).inventory, Blocks.LECTERN);
 
     registry.register(ShulkerBoxTooltipUtil.id("ender_chest"), new EnderChestPreviewProvider(), Items.ENDER_CHEST);
     // @formatter:on

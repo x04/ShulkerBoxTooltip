@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ShulkerBoxPreviewProvider extends BlockEntityAwarePreviewProvider<ShulkerBoxBlockEntity> {
+public class ShulkerBoxPreviewProvider extends InventoryAwarePreviewProvider<ShulkerBoxBlockEntity> {
   public ShulkerBoxPreviewProvider(int maxRowSize, Supplier<? extends ShulkerBoxBlockEntity> blockEntitySupplier) {
     super(maxRowSize, blockEntitySupplier);
   }
