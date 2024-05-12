@@ -82,9 +82,9 @@ public class HandledScreenMixin implements HandledScreenLockTooltip {
 
 
   @Inject(at = @At("HEAD"), method = "drawMouseoverTooltip(Lnet/minecraft/client/gui/DrawContext;II)V")
- private void enableLockKeyHints(CallbackInfo ci) {
+  private void enableLockKeyHints(CallbackInfo ci) {
     ShulkerBoxTooltipClient.setLockKeyHintsEnabled(true);
- }
+  }
 
   @Inject(at = @At("RETURN"), method = "drawMouseoverTooltip(Lnet/minecraft/client/gui/DrawContext;II)V")
   private void disableLockKeyHints(CallbackInfo ci) {
@@ -110,8 +110,8 @@ public class HandledScreenMixin implements HandledScreenLockTooltip {
     if (mouseLockSlot != null) {
       ItemStack mouseStack = mouseLockSlot.getStack();
 
-      PreviewContext context = PreviewContext.of(mouseStack,
-          ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player);
+      PreviewContext context = PreviewContext.builder(mouseStack).withOwner(
+          ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player).build();
 
       // Check if the locked slot contains an item that is actively being previewed,
       // if not we reset the lock, so that pressing "Control" doesn't randomly lock slots for non-previewable items.

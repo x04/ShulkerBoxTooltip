@@ -121,7 +121,7 @@ public class ShulkerBoxTooltipClient {
     if (client == null)
       return;
 
-    PreviewContext context = PreviewContext.of(stack, client.player);
+    PreviewContext context = PreviewContext.builder(stack).withOwner(client.player).build();
     PreviewProvider provider = ShulkerBoxTooltipApi.getPreviewProviderForStack(stack);
 
     if (provider == null)

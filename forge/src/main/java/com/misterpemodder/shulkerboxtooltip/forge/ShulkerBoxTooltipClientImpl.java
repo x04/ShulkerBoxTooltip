@@ -46,8 +46,8 @@ public final class ShulkerBoxTooltipClientImpl extends ShulkerBoxTooltipClient {
   }
 
   private static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
-    var context = PreviewContext.of(event.getItemStack(),
-        ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player);
+    var context = PreviewContext.builder(event.getItemStack()).withOwner(
+        ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player).build();
     var elements = event.getTooltipElements();
 
     // Add the preview window at the beginning of the tooltip

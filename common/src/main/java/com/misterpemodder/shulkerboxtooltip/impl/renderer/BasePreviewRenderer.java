@@ -1,5 +1,6 @@
 package com.misterpemodder.shulkerboxtooltip.impl.renderer;
 
+import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltipClient;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.config.PreviewConfiguration;
@@ -8,6 +9,8 @@ import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.misterpemodder.shulkerboxtooltip.impl.util.MergedItemStack;
 import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -17,6 +20,7 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public abstract class BasePreviewRenderer implements PreviewRenderer {
   protected PreviewType previewType;
   protected PreviewConfiguration config;
@@ -42,7 +46,11 @@ public abstract class BasePreviewRenderer implements PreviewRenderer {
     this.slotXOffset = slotXOffset;
     this.slotYOffset = slotYOffset;
 
-    this.setPreview(PreviewContext.of(ItemStack.EMPTY), EmptyPreviewProvider.INSTANCE);
+    var world = ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.world;
+
+    this.setPreview(PreviewContext.builder(ItemStack.EMPTY)
+        .withRegistryLookup(world == null ? null : world.getRegistryManager())
+        .build(), EmptyPreviewProvider.INSTANCE);
   }
 
   protected int getMaxRowSize() {

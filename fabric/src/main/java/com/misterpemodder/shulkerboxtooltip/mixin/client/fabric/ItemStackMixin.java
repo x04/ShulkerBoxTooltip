@@ -21,8 +21,8 @@ import java.util.Optional;
 public class ItemStackMixin {
   @Inject(at = @At("HEAD"), method = "getTooltipData()Ljava/util/Optional;", cancellable = true)
   private void onGetTooltipData(CallbackInfoReturnable<Optional<TooltipData>> ci) {
-    PreviewContext context = PreviewContext.of((ItemStack) (Object) this,
-        ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player);
+    PreviewContext context = PreviewContext.builder((ItemStack) (Object) this).withOwner(
+        ShulkerBoxTooltipClient.client == null ? null : ShulkerBoxTooltipClient.client.player).build();
 
     if (ShulkerBoxTooltipApi.isPreviewAvailable(context))
       ci.setReturnValue(Optional.of(
