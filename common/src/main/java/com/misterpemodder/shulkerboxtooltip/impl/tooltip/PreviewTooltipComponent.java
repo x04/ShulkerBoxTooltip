@@ -22,6 +22,10 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
     this.renderer = renderer;
     this.provider = data.provider();
     this.context = data.context();
+
+    renderer.setPreview(this.context, this.provider);
+    renderer.setPreviewType(
+        ShulkerBoxTooltipApi.getCurrentPreviewType(this.provider.isFullPreviewAvailable(this.context)));
   }
 
   @Override
@@ -40,7 +44,6 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
 
   @Override
   public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
-    this.prepareRenderer();
     this.drawAt(x, y, context, textRenderer, 0, 0);
   }
 
@@ -49,7 +52,6 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
       int tooltipTopY, int tooltipBottomY, int mouseX, int mouseY) {
     PreviewPosition position = ShulkerBoxTooltip.config.preview.position;
 
-    this.prepareRenderer();
     if (position != PreviewPosition.INSIDE) {
       int h = this.renderer.getHeight();
       int w = this.renderer.getWidth();
@@ -62,12 +64,6 @@ public class PreviewTooltipComponent extends PositionAwareTooltipComponent {
         y = tooltipTopY - h;
     }
     this.drawAt(x, y, context, textRenderer, mouseX, mouseY);
-  }
-
-  private void prepareRenderer() {
-    this.renderer.setPreview(this.context, this.provider);
-    this.renderer.setPreviewType(
-        ShulkerBoxTooltipApi.getCurrentPreviewType(this.provider.isFullPreviewAvailable(this.context)));
   }
 
   private void drawAt(int x, int y, DrawContext context, TextRenderer textRenderer, int mouseX, int mouseY) {
