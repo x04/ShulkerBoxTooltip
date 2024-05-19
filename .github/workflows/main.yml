@@ -42,11 +42,11 @@ jobs:
         name: fabric-artifacts
         path: fabric/build/libs/
 
-    - name: Upload Forge Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: forge-artifacts
-        path: forge/build/libs/
+#    - name: Upload Forge Artifacts
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: forge-artifacts
+#        path: forge/build/libs/
 
   release_github:
     name: "Release on GitHub"
@@ -92,7 +92,7 @@ jobs:
         prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
         files: |
           ${{ steps.download_artifacts.outputs.download-path }}/fabric-artifacts/*
-          ${{ steps.download_artifacts.outputs.download-path }}/forge-artifacts/*
+#          ${{ steps.download_artifacts.outputs.download-path }}/forge-artifacts/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
