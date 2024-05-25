@@ -1,3 +1,7 @@
+4.1.0-alpha.2+1.20.6:
+- Fixed crashes on Quilt related to built-in Mixin library not compatible with Java 21
+
+====================================================================================================
 4.1.0-alpha.1+1.20.6:
 - Updated to Minecraft 1.20.6 (#151)
 - Disabled support for Forge: a migration to NeoForge is considered for the future.
