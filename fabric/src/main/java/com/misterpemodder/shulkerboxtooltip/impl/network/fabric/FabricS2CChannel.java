@@ -8,13 +8,13 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
 class FabricS2CChannel<T> extends FabricChannel<T> implements S2CChannel<T> {
   private boolean payloadTypeRegistered = false;
 
-  public FabricS2CChannel(Identifier id, MessageType<T> type) {
+  public FabricS2CChannel(ResourceLocation id, MessageType<T> type) {
     super(id, type);
   }
 
@@ -41,7 +41,7 @@ class FabricS2CChannel<T> extends FabricChannel<T> implements S2CChannel<T> {
   }
 
   @Override
-  public void sendTo(ServerPlayerEntity player, T message) {
+  public void sendTo(ServerPlayer player, T message) {
     ServerPlayNetworking.send(player, new Payload<>(this.id, message));
   }
 

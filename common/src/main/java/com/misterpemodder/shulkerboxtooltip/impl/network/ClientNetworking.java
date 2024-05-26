@@ -9,8 +9,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +33,7 @@ public class ClientNetworking {
    * Forge's <code>ClientPlayerNetworkEvent.LoggedInEvent</code> events.
    */
   @Environment(EnvType.CLIENT)
-  public static void onJoinServer(MinecraftClient client) {
+  public static void onJoinServer(Minecraft client) {
     client.execute(() -> {
       PluginManager.loadColors();
       PluginManager.loadProviders();
@@ -42,7 +42,7 @@ public class ClientNetworking {
 
     // Re-init some config values before syncing
     serverProtocolVersion = null;
-    if (!MinecraftClient.getInstance().isIntegratedServerRunning())
+    if (!Minecraft.getInstance().hasSingleplayerServer())
       ConfigurationHandler.reinitClientSideSyncedValues(ShulkerBoxTooltip.config);
     C2SMessages.attemptHandshake();
   }
@@ -65,7 +65,7 @@ public class ClientNetworking {
    * @return The newly-created channel.
    */
   @ExpectPlatform
-  public static <T> C2SChannel<T> createC2SChannel(Identifier id, MessageType<T> type) {
+  public static <T> C2SChannel<T> createC2SChannel(ResourceLocation id, MessageType<T> type) {
     throw new AssertionError("Missing implementation of Networking.createC2SChannel()");
   }
 }

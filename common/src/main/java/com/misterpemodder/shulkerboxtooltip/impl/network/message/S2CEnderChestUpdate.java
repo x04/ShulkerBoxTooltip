@@ -2,12 +2,12 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.message;
 
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.util.NbtType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.inventory.EnderChestInventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.PlayerEnderChestContainer;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -17,23 +17,23 @@ import java.util.Objects;
  *
  * @param nbtInventory NBT-serialized ender chest inventory.
  */
-public record S2CEnderChestUpdate(@Nullable NbtList nbtInventory) {
-  public static S2CEnderChestUpdate create(EnderChestInventory inventory, RegistryWrapper.WrapperLookup registries) {
-    return new S2CEnderChestUpdate(inventory.toNbtList(registries));
+public record S2CEnderChestUpdate(@Nullable ListTag nbtInventory) {
+  public static S2CEnderChestUpdate create(PlayerEnderChestContainer inventory, HolderLookup.Provider registries) {
+    return new S2CEnderChestUpdate(inventory.createTag(registries));
   }
 
   public static class Type implements MessageType<S2CEnderChestUpdate> {
     @Override
-    public void encode(S2CEnderChestUpdate message, PacketByteBuf buf) {
-      NbtCompound compound = new NbtCompound();
+    public void encode(S2CEnderChestUpdate message, FriendlyByteBuf buf) {
+      CompoundTag compound = new CompoundTag();
 
       compound.put("inv", Objects.requireNonNull(message.nbtInventory));
       buf.writeNbt(compound);
     }
 
     @Override
-    public S2CEnderChestUpdate decode(PacketByteBuf buf) {
-      NbtCompound compound = buf.readNbt();
+    public S2CEnderChestUpdate decode(FriendlyByteBuf buf) {
+      CompoundTag compound = buf.readNbt();
 
       if (compound == null || !compound.contains("inv", NbtType.LIST))
         return new S2CEnderChestUpdate(null);
@@ -45,10 +45,10 @@ public record S2CEnderChestUpdate(@Nullable NbtList nbtInventory) {
       if (message.nbtInventory == null)
         return;
 
-      MinecraftClient.getInstance().execute(() -> {
-        if (MinecraftClient.getInstance().player != null) {
-          var player = MinecraftClient.getInstance().player;
-          player.getEnderChestInventory().readNbtList(message.nbtInventory, player.getRegistryManager());
+      Minecraft.getInstance().execute(() -> {
+        if (Minecraft.getInstance().player != null) {
+          var player = Minecraft.getInstance().player;
+          player.getEnderChestInventory().fromTag(message.nbtInventory, player.registryAccess());
         }
       });
     }

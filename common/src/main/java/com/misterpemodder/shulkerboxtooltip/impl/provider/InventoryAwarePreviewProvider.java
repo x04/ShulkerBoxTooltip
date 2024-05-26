@@ -2,15 +2,15 @@ package com.misterpemodder.shulkerboxtooltip.impl.provider;
 
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.provider.BlockEntityPreviewProvider;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.LootableInventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.RandomizableContainer;
 
 import java.util.function.Supplier;
 
 /**
- * A {@link BlockEntityPreviewProvider} that uses a {@link Inventory} instance to get its information.
+ * A {@link BlockEntityPreviewProvider} that uses a {@link Container} instance to get its information.
  */
-public class InventoryAwarePreviewProvider<I extends Inventory> extends BlockEntityPreviewProvider {
+public class InventoryAwarePreviewProvider<I extends Container> extends BlockEntityPreviewProvider {
 
   private final Supplier<? extends I> inventoryFactory;
 
@@ -32,11 +32,11 @@ public class InventoryAwarePreviewProvider<I extends Inventory> extends BlockEnt
 
   @Override
   public int getInventoryMaxSize(PreviewContext context) {
-    return this.getInventory().size();
+    return this.getInventory().getContainerSize();
   }
 
   @Override
   public boolean canUseLootTables() {
-    return this.getInventory() instanceof LootableInventory;
+    return this.getInventory() instanceof RandomizableContainer;
   }
 }

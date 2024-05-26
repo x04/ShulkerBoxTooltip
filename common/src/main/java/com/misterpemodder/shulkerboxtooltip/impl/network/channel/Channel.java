@@ -2,7 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.channel;
 
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Base network channel abstraction.
@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
  * @param <T> The message data type.
  */
 public interface Channel<T> {
-  Identifier getId();
+  ResourceLocation getId();
 
   MessageType<T> getMessageType();
 

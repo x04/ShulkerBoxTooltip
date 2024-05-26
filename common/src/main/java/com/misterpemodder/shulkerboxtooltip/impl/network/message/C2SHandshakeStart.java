@@ -5,8 +5,8 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.ProtocolVersion;
 import com.misterpemodder.shulkerboxtooltip.impl.network.ServerNetworking;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.C2SChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 
 /**
  * Initiates a handshake with the server.
@@ -19,18 +19,18 @@ public record C2SHandshakeStart(ProtocolVersion clientVersion) {
   public static class Type implements MessageType<C2SHandshakeStart> {
 
     @Override
-    public void encode(C2SHandshakeStart message, PacketByteBuf buf) {
+    public void encode(C2SHandshakeStart message, FriendlyByteBuf buf) {
       message.clientVersion.writeToPacketBuf(buf);
     }
 
     @Override
-    public C2SHandshakeStart decode(PacketByteBuf buf) {
+    public C2SHandshakeStart decode(FriendlyByteBuf buf) {
       return new C2SHandshakeStart(ProtocolVersion.readFromPacketBuf(buf));
     }
 
     @Override
     public void onReceive(C2SHandshakeStart message, MessageContext<C2SHandshakeStart> context) {
-      var player = (ServerPlayerEntity) context.getPlayer();
+      var player = (ServerPlayer) context.getPlayer();
       var channel = (C2SChannel<C2SHandshakeStart>) context.getChannel();
 
       if (message.clientVersion == null) {

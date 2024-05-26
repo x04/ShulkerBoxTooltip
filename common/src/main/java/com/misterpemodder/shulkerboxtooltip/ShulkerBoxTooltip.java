@@ -13,9 +13,9 @@ import com.misterpemodder.shulkerboxtooltip.impl.util.ShulkerBoxTooltipUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.*;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.*;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -78,11 +78,11 @@ public class ShulkerBoxTooltip implements ShulkerBoxTooltipApi {
         .register("dispenser", 3, DispenserBlockEntity::new, Blocks.DISPENSER)
         .register("hopper", 5, HopperBlockEntity::new, Blocks.HOPPER)
         .register("brewing_stand", 7, BrewingStandBlockEntity::new, Blocks.BREWING_STAND)
-        .register("chiseled_bookshelf", 3, ChiseledBookshelfBlockEntity::new, Blocks.CHISELED_BOOKSHELF)
+        .register("chiseled_bookshelf", 3, ChiseledBookShelfBlockEntity::new, Blocks.CHISELED_BOOKSHELF)
         .register("decorated_pot", 1, DecoratedPotBlockEntity::new, Blocks.DECORATED_POT);
 
     new FixedPreviewProviderRegistry<>(registry, LecternPreviewProvider::new)
-        .register("lectern", 1, (pos, state) -> new LecternBlockEntity(pos, state).inventory, Blocks.LECTERN);
+        .register("lectern", 1, (pos, state) -> new LecternBlockEntity(pos, state).bookAccess, Blocks.LECTERN);
 
     registry.register(ShulkerBoxTooltipUtil.id("ender_chest"), new EnderChestPreviewProvider(), Items.ENDER_CHEST);
     // @formatter:on

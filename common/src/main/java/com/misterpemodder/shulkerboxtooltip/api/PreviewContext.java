@@ -2,9 +2,9 @@ package com.misterpemodder.shulkerboxtooltip.api;
 
 import com.misterpemodder.shulkerboxtooltip.api.config.PreviewConfiguration;
 import com.misterpemodder.shulkerboxtooltip.impl.PreviewContextImpl;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -43,7 +43,7 @@ public interface PreviewContext {
   @Nonnull
   @Contract("_, _ -> new")
   @Deprecated(since = "4.1.0", forRemoval = true)
-  static PreviewContext of(ItemStack stack, @Nullable PlayerEntity owner) {
+  static PreviewContext of(ItemStack stack, @Nullable Player owner) {
     return builder(stack).withOwner(owner).build();
   }
 
@@ -78,7 +78,7 @@ public interface PreviewContext {
    * @since 3.1.0
    */
   @Nullable
-  PlayerEntity owner();
+  Player owner();
 
   /**
    * @return the configuration in use for this context.
@@ -92,7 +92,7 @@ public interface PreviewContext {
    * @since 4.1.0
    */
   @Nullable
-  RegistryWrapper.WrapperLookup registryLookup();
+  HolderLookup.Provider registryLookup();
 
   /**
    * A builder for creating {@link PreviewContext} instances.
@@ -105,7 +105,7 @@ public interface PreviewContext {
      * @return this builder instance for chaining.
      * @since 4.1.0
      */
-    Builder withOwner(@Nullable PlayerEntity owner);
+    Builder withOwner(@Nullable Player owner);
 
     /**
      * Sets the registry lookup to use for deserialization of the item stack.
@@ -116,7 +116,7 @@ public interface PreviewContext {
      * @return this builder instance for chaining.
      * @since 4.1.0
      */
-    Builder withRegistryLookup(@Nullable RegistryWrapper.WrapperLookup registryLookup);
+    Builder withRegistryLookup(@Nullable HolderLookup.Provider registryLookup);
 
     /**
      * Builds the {@link PreviewContext} instance.

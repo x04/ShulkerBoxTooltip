@@ -1,14 +1,14 @@
 package com.misterpemodder.shulkerboxtooltip.mixin.client;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
-import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.client.item.TooltipType;
-import net.minecraft.component.DataComponentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,10 +18,12 @@ import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-  @Inject(at = @At("HEAD"), method = "appendTooltip(Lnet/minecraft/component/DataComponentType;Lnet/minecraft/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/client/item/TooltipType;)V", cancellable = true)
-  private void removeLore(DataComponentType<?> componentType, Item.TooltipContext context, Consumer<Text> textConsumer,
-      TooltipType type, CallbackInfo ci) {
-    if (componentType == DataComponentTypes.LORE) {
+  @Inject(at = @At("HEAD"), method = "addToTooltip("
+      + "Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/Item$TooltipContext;"
+      + "Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V", cancellable = true)
+  private void removeLore(DataComponentType<?> componentType, Item.TooltipContext context,
+      Consumer<Component> textConsumer, TooltipFlag type, CallbackInfo ci) {
+    if (componentType == DataComponents.LORE) {
       Item item = ((ItemStack) (Object) this).getItem();
 
       //noinspection UnreachableCode

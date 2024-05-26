@@ -3,7 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.message;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.C2SMessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.S2CMessageContext;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 
 /**
  * Describes a message.
@@ -17,7 +17,7 @@ public interface MessageType<T> {
    * @param message The message to encode.
    * @param buf     The buffer.
    */
-  void encode(T message, PacketByteBuf buf);
+  void encode(T message, FriendlyByteBuf buf);
 
   /**
    * Reads a message from the given buffer.
@@ -25,7 +25,7 @@ public interface MessageType<T> {
    * @param buf The buffer.
    * @return The decoded message.
    */
-  T decode(PacketByteBuf buf);
+  T decode(FriendlyByteBuf buf);
 
   /**
    * Handles the given message.

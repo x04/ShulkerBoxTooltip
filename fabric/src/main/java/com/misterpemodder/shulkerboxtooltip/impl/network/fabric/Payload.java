@@ -1,10 +1,10 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-record Payload<T>(CustomPayload.Id<?> id, T value) implements CustomPayload {
+record Payload<T>(CustomPacketPayload.Type<?> id, T value) implements CustomPacketPayload {
   @Override
-  public Id<? extends CustomPayload> getId() {
+  public Type<? extends CustomPacketPayload> type() {
     return this.id;
   }
 }

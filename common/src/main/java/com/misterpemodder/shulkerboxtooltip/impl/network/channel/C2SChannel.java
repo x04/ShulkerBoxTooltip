@@ -2,7 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.channel;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 /**
  * Client-to-server channel abstraction.
@@ -15,14 +15,14 @@ public interface C2SChannel<T> extends Channel<T> {
    *
    * @param player The player.
    */
-  void registerFor(ServerPlayerEntity player);
+  void registerFor(ServerPlayer player);
 
   /**
    * Unregisters handling of messages in this channel for the given player.
    *
    * @param player The player.
    */
-  void unregisterFor(ServerPlayerEntity player);
+  void unregisterFor(ServerPlayer player);
 
   /**
    * Sends a message to the server.

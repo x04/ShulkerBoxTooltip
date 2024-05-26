@@ -1,9 +1,9 @@
 package com.misterpemodder.shulkerboxtooltip.impl.util;
 
-import net.minecraft.component.ComponentMap;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
 
@@ -13,12 +13,12 @@ import java.util.Objects;
 public class ItemKey {
   private final Item item;
   private final int id;
-  private final ComponentMap components;
+  private final DataComponentMap components;
   private final boolean ignoreComponents;
 
   public ItemKey(ItemStack stack, boolean ignoreComponents) {
     this.item = stack.getItem();
-    this.id = Registries.ITEM.getRawId(this.item);
+    this.id = BuiltInRegistries.ITEM.getId(this.item);
     this.components = stack.getComponents();
     this.ignoreComponents = ignoreComponents;
   }

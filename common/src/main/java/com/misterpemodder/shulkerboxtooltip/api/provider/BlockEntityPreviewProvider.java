@@ -4,18 +4,18 @@ import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ContainerLootComponent;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.SeededContainerLoot;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.List;
  * </p>
  * <p>
  * Use/extend this when the target item(s) has the {@code Inventory} inside {@code BlockEntityData}
- * as created by {@link Inventories#writeNbt(NbtCompound, DefaultedList, RegistryWrapper.WrapperLookup)}.
+ * as created by {@link ContainerHelper#saveAllItems(CompoundTag, NonNullList, HolderLookup.Provider)}.
  * </p>
  *
  * @since 1.3.0
@@ -97,25 +97,25 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
 
   @Override
   public boolean shouldDisplay(PreviewContext context) {
-    if (this.canUseLootTables() && context.stack().contains(DataComponentTypes.CONTAINER_LOOT))
+    if (this.canUseLootTables() && context.stack().has(DataComponents.CONTAINER_LOOT))
       return false;
     return getItemCount(this.getInventory(context)) > 0;
   }
 
   @Override
   public boolean showTooltipHints(PreviewContext context) {
-    return context.stack().contains(DataComponentTypes.CONTAINER);
+    return context.stack().has(DataComponents.CONTAINER);
   }
 
   @Override
   public List<ItemStack> getInventory(PreviewContext context) {
     var registries = context.registryLookup();
-    var container = context.stack().get(DataComponentTypes.CONTAINER);
+    var container = context.stack().get(DataComponents.CONTAINER);
     var invMaxSize = this.getInventoryMaxSize(context);
-    var inv = DefaultedList.ofSize(invMaxSize, ItemStack.EMPTY);
+    var inv = NonNullList.withSize(invMaxSize, ItemStack.EMPTY);
 
     if (registries != null && container != null)
-      container.copyTo(inv);
+      container.copyInto(inv);
 
     return inv;
   }
@@ -126,18 +126,19 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
   }
 
   @Override
-  public List<Text> addTooltip(PreviewContext context) {
+  public List<Component> addTooltip(PreviewContext context) {
     ItemStack stack = context.stack();
-    ContainerLootComponent lootComponent = stack.get(DataComponentTypes.CONTAINER_LOOT);
-    Style style = Style.EMPTY.withColor(Formatting.GRAY);
+    SeededContainerLoot lootComponent = stack.get(DataComponents.CONTAINER_LOOT);
+    Style style = Style.EMPTY.withColor(ChatFormatting.GRAY);
 
     if (this.canUseLootTables() && lootComponent != null) {
       return switch (ShulkerBoxTooltip.config.tooltip.lootTableInfoType) {
         case HIDE -> Collections.emptyList();
-        case SIMPLE -> Collections.singletonList(Text.translatable("shulkerboxtooltip.hint.lootTable").setStyle(style));
+        case SIMPLE -> Collections.singletonList(
+            Component.translatable("shulkerboxtooltip.hint.lootTable").setStyle(style));
         default -> Arrays.asList(
-            Text.translatable("shulkerboxtooltip.hint.lootTable.advanced").append(Text.literal(": ")),
-            Text.literal(" " + lootComponent.lootTable().getValue()).setStyle(style));
+            Component.translatable("shulkerboxtooltip.hint.lootTable.advanced").append(Component.literal(": ")),
+            Component.literal(" " + lootComponent.lootTable().location()).setStyle(style));
       };
     }
     if (ShulkerBoxTooltipApi.getCurrentPreviewType(this.isFullPreviewAvailable(context)) == PreviewType.FULL)
@@ -153,8 +154,8 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * @return The passed tooltip, to allow chaining.
    * @since 2.0.0
    */
-  public static List<Text> getItemCountTooltip(List<Text> tooltip, @Nullable List<ItemStack> items) {
-    return getItemListTooltip(tooltip, items, Style.EMPTY.withColor(Formatting.GRAY));
+  public static List<Component> getItemCountTooltip(List<Component> tooltip, @Nullable List<ItemStack> items) {
+    return getItemListTooltip(tooltip, items, Style.EMPTY.withColor(ChatFormatting.GRAY));
   }
 
   /**
@@ -166,14 +167,15 @@ public class BlockEntityPreviewProvider implements PreviewProvider {
    * @return The passed tooltip, to allow chaining.
    * @since 2.0.0
    */
-  public static List<Text> getItemListTooltip(List<Text> tooltip, @Nullable List<ItemStack> items, Style style) {
+  public static List<Component> getItemListTooltip(List<Component> tooltip, @Nullable List<ItemStack> items,
+      Style style) {
     int itemCount = getItemCount(items);
-    MutableText text;
+    MutableComponent text;
 
     if (itemCount > 0)
-      text = Text.translatable("container.shulkerbox.contains", itemCount);
+      text = Component.translatable("container.shulkerbox.contains", itemCount);
     else
-      text = Text.translatable("container.shulkerbox.empty");
+      text = Component.translatable("container.shulkerbox.empty");
     tooltip.add(text.setStyle(style));
     return tooltip;
   }

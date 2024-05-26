@@ -10,10 +10,10 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 class FabricC2SChannel<T> extends FabricChannel<T> implements C2SChannel<T> {
   private boolean payloadTypeRegistered = false;
@@ -21,7 +21,7 @@ class FabricC2SChannel<T> extends FabricChannel<T> implements C2SChannel<T> {
   @Environment(EnvType.CLIENT)
   private boolean serverRegistered;
 
-  public FabricC2SChannel(Identifier id, MessageType<T> type) {
+  public FabricC2SChannel(ResourceLocation id, MessageType<T> type) {
     super(id, type);
     if (ShulkerBoxTooltip.isClient())
       this.serverRegistered = false;
@@ -38,8 +38,8 @@ class FabricC2SChannel<T> extends FabricChannel<T> implements C2SChannel<T> {
   }
 
   @Override
-  public void registerFor(ServerPlayerEntity player) {
-    ServerPlayNetworkHandler handler = player.networkHandler;
+  public void registerFor(ServerPlayer player) {
+    ServerGamePacketListenerImpl handler = player.connection;
 
     if (handler == null) {
       ShulkerBoxTooltip.LOGGER.error("Cannot register packet receiver for " + this.getId() + ", player is not in game");
@@ -49,8 +49,8 @@ class FabricC2SChannel<T> extends FabricChannel<T> implements C2SChannel<T> {
   }
 
   @Override
-  public void unregisterFor(ServerPlayerEntity player) {
-    ServerPlayNetworkHandler handler = player.networkHandler;
+  public void unregisterFor(ServerPlayer player) {
+    ServerGamePacketListenerImpl handler = player.connection;
 
     if (handler != null) {
       ServerPlayNetworking.unregisterReceiver(handler, this.getId());
@@ -65,7 +65,7 @@ class FabricC2SChannel<T> extends FabricChannel<T> implements C2SChannel<T> {
   @Override
   @Environment(EnvType.CLIENT)
   public boolean canSendToServer() {
-    return this.serverRegistered && MinecraftClient.getInstance().getNetworkHandler() != null;
+    return this.serverRegistered && Minecraft.getInstance().getConnection() != null;
   }
 
   @Override

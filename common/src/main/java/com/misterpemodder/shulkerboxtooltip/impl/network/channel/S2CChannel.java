@@ -2,7 +2,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.channel;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 /**
  * Server-to-client channel abstraction.
@@ -28,5 +28,5 @@ public interface S2CChannel<T> extends Channel<T> {
    * @param player  The target player.
    * @param message The message to send.
    */
-  void sendTo(ServerPlayerEntity player, T message);
+  void sendTo(ServerPlayer player, T message);
 }
