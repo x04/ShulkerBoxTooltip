@@ -13,15 +13,18 @@ import net.minecraft.server.network.ServerPlayerEntity;
  * The client to server messages of ShulkerBoxTooltip.
  */
 public final class C2SMessages {
-  public static final C2SChannel<C2SHandshakeStart> HANDSHAKE_START = new C2SChannel<>(
+  public static final C2SChannel<C2SHandshakeStart> HANDSHAKE_START = ClientNetworking.createC2SChannel(
       ShulkerBoxTooltipUtil.id("c2s_handshake"), new C2SHandshakeStart.Type());
-  public static final C2SChannel<C2SEnderChestUpdateRequest> ENDER_CHEST_UPDATE_REQUEST = new C2SChannel<>(
-      ShulkerBoxTooltipUtil.id("ec_update_req"), new C2SEnderChestUpdateRequest.Type());
+  public static final C2SChannel<C2SEnderChestUpdateRequest> ENDER_CHEST_UPDATE_REQUEST =
+      ClientNetworking.createC2SChannel(ShulkerBoxTooltipUtil.id("ec_update_req"),
+          new C2SEnderChestUpdateRequest.Type());
 
-  /**
-   * Guarantees the initialization of the static members.
-   */
-  public static void init() {
+  private C2SMessages() {
+  }
+
+  public static void registerPayloadTypes() {
+    HANDSHAKE_START.registerPayloadType();
+    ENDER_CHEST_UPDATE_REQUEST.registerPayloadType();
   }
 
   @Environment(EnvType.CLIENT)
@@ -44,11 +47,10 @@ public final class C2SMessages {
    * Sends a handshake packet to the server, if possible.
    */
   public static void attemptHandshake() {
-    // TODO: update networking code
-//    if (ShulkerBoxTooltip.config.preview.serverIntegration && ClientNetworking.serverProtocolVersion == null
-//        && C2SMessages.HANDSHAKE_START.canSendToServer()) {
-//      ShulkerBoxTooltip.LOGGER.info("Server integration enabled, attempting handshake...");
-//      C2SMessages.HANDSHAKE_START.sendToServer(new C2SHandshakeStart(ProtocolVersion.CURRENT));
-//    }
+    if (ShulkerBoxTooltip.config.preview.serverIntegration && ClientNetworking.serverProtocolVersion == null
+        && C2SMessages.HANDSHAKE_START.canSendToServer()) {
+      ShulkerBoxTooltip.LOGGER.info("Server integration enabled, attempting handshake...");
+      C2SMessages.HANDSHAKE_START.sendToServer(new C2SHandshakeStart(ProtocolVersion.CURRENT));
+    }
   }
 }

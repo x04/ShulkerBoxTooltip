@@ -3,8 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.context;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.Channel;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public record C2SMessageContext<MSG>(ServerPlayerEntity player, Channel<MSG> channel)
-    implements MessageContext<MSG> {
+public record C2SMessageContext<T>(ServerPlayerEntity player, Channel<T> channel) implements MessageContext<T> {
   @Override
   public void execute(Runnable task) {
     this.player.server.execute(task);
@@ -16,7 +15,7 @@ public record C2SMessageContext<MSG>(ServerPlayerEntity player, Channel<MSG> cha
   }
 
   @Override
-  public Channel<MSG> getChannel() {
+  public Channel<T> getChannel() {
     return this.channel;
   }
 

@@ -3,7 +3,7 @@ package com.misterpemodder.shulkerboxtooltip.impl.network.context;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.Channel;
 import net.minecraft.entity.player.PlayerEntity;
 
-public sealed interface MessageContext<MSG> permits C2SMessageContext, S2CMessageContext {
+public sealed interface MessageContext<T> permits C2SMessageContext, S2CMessageContext {
   /**
    * Executes the given task in the server/client's main thread.
    *
@@ -13,7 +13,7 @@ public sealed interface MessageContext<MSG> permits C2SMessageContext, S2CMessag
 
   PlayerEntity getPlayer();
 
-  Channel<MSG> getChannel();
+  Channel<T> getChannel();
 
   Side getReceivingSide();
 

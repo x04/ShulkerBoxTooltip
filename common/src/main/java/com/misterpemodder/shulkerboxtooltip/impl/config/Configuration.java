@@ -39,10 +39,8 @@ public final class Configuration implements ConfigData, PreviewConfiguration {
   @Environment(EnvType.CLIENT)
   public ControlsCategory controls;
 
-  // TODO: update networking code
   @ConfigEntry.Category("server")
   @ConfigEntry.Gui.TransitiveObject
-  @ConfigEntry.Gui.Excluded
   public ServerCategory server;
 
   public Configuration() {

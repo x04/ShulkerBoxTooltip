@@ -40,12 +40,11 @@ public record C2SHandshakeStart(ProtocolVersion clientVersion) {
       }
 
       // compatibility check
-      ShulkerBoxTooltip.LOGGER.info(player.getName() + ": protocol version: "
-              + message.clientVersion);
+      ShulkerBoxTooltip.LOGGER.info(player.getName() + ": protocol version: " + message.clientVersion);
       if (message.clientVersion.major() != ProtocolVersion.CURRENT.major()) {
-        ShulkerBoxTooltip.LOGGER.error(player.getName()
-            + ": incompatible client protocol version, expected " + ProtocolVersion.CURRENT.major() + ", got "
-            + message.clientVersion.major());
+        ShulkerBoxTooltip.LOGGER.error(
+            player.getName() + ": incompatible client protocol version, expected " + ProtocolVersion.CURRENT.major()
+                + ", got " + message.clientVersion.major());
         channel.unregisterFor(player);
         return;
       }

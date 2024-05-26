@@ -7,7 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 
 @Environment(EnvType.CLIENT)
-public record S2CMessageContext<MSG>(Channel<MSG> channel) implements MessageContext<MSG> {
+public record S2CMessageContext<T>(Channel<T> channel) implements MessageContext<T> {
   @Override
   public void execute(Runnable task) {
     MinecraftClient.getInstance().execute(task);
@@ -19,7 +19,7 @@ public record S2CMessageContext<MSG>(Channel<MSG> channel) implements MessageCon
   }
 
   @Override
-  public Channel<MSG> getChannel() {
+  public Channel<T> getChannel() {
     return this.channel;
   }
 
