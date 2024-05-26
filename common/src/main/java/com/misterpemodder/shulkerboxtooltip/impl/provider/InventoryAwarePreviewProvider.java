@@ -31,6 +31,11 @@ public class InventoryAwarePreviewProvider<I extends Container> extends BlockEnt
   }
 
   @Override
+  public boolean showTooltipHints(PreviewContext context) {
+    return this.shouldDisplay(context);
+  }
+
+  @Override
   public int getInventoryMaxSize(PreviewContext context) {
     return this.getInventory().getContainerSize();
   }
