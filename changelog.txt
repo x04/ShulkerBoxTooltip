@@ -1,3 +1,7 @@
+4.1.0-alpha.3+1.20.6:
+- Re-enabled networking support and ender chest preview.
+
+====================================================================================================
 4.1.0-alpha.2+1.20.6:
 - Fixed crashes on Quilt related to built-in Mixin library not compatible with Java 21
 
