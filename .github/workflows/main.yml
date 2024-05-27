@@ -42,6 +42,12 @@ jobs:
         name: fabric-artifacts
         path: fabric/build/libs/
 
+    - name: Upload NeoForge Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: neoforge-artifacts
+        path: neoforge/build/libs/
+
 #    - name: Upload Forge Artifacts
 #      uses: actions/upload-artifact@v3
 #      with:
@@ -92,6 +98,7 @@ jobs:
         prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
         files: |
           ${{ steps.download_artifacts.outputs.download-path }}/fabric-artifacts/*
+          ${{ steps.download_artifacts.outputs.download-path }}/neoforge-artifacts/*
 #          ${{ steps.download_artifacts.outputs.download-path }}/forge-artifacts/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
