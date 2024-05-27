@@ -1,31 +1,19 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
+import com.misterpemodder.shulkerboxtooltip.impl.network.Payload;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.S2CChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.S2CMessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 class FabricS2CChannel<T> extends FabricChannel<T> implements S2CChannel<T> {
-  private boolean payloadTypeRegistered = false;
-
   public FabricS2CChannel(ResourceLocation id, MessageType<T> type) {
     super(id, type);
-  }
-
-  @Override
-  public void registerPayloadType() {
-    if (this.payloadTypeRegistered) {
-      return;
-    }
-    PayloadTypeRegistry.playC2S().register(this.id, this.codec);
-    PayloadTypeRegistry.playS2C().register(this.id, this.codec);
-    this.payloadTypeRegistered = true;
   }
 
   @Override

@@ -57,6 +57,10 @@ allprojects {
 
     repositories {
         maven {
+            name = 'NeoForge'
+            url 'https://maven.neoforged.net/releases'
+        }
+        maven {
             name = 'CurseForge'
             url 'https://minecraft.curseforge.com/api/maven'
         }

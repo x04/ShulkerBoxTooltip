@@ -1,6 +1,7 @@
 package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
 
 import com.misterpemodder.shulkerboxtooltip.ShulkerBoxTooltip;
+import com.misterpemodder.shulkerboxtooltip.impl.network.Payload;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.C2SChannel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.C2SMessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
@@ -8,7 +9,6 @@ import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -16,8 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 class FabricC2SChannel<T> extends FabricChannel<T> implements C2SChannel<T> {
-  private boolean payloadTypeRegistered = false;
-
   @Environment(EnvType.CLIENT)
   private boolean serverRegistered;
 
@@ -25,16 +23,6 @@ class FabricC2SChannel<T> extends FabricChannel<T> implements C2SChannel<T> {
     super(id, type);
     if (ShulkerBoxTooltip.isClient())
       this.serverRegistered = false;
-  }
-
-  @Override
-  public void registerPayloadType() {
-    if (this.payloadTypeRegistered) {
-      return;
-    }
-    PayloadTypeRegistry.playC2S().register(this.id, this.codec);
-    PayloadTypeRegistry.playS2C().register(this.id, this.codec);
-    this.payloadTypeRegistered = true;
   }
 
   @Override
@@ -58,6 +46,7 @@ class FabricC2SChannel<T> extends FabricChannel<T> implements C2SChannel<T> {
   }
 
   @Override
+  @Environment(EnvType.CLIENT)
   public void sendToServer(T message) {
     ClientPlayNetworking.send(new Payload<>(this.id, message));
   }

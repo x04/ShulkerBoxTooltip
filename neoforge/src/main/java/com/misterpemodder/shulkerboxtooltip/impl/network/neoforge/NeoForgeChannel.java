@@ -1,23 +1,24 @@
-package com.misterpemodder.shulkerboxtooltip.impl.network.fabric;
+package com.misterpemodder.shulkerboxtooltip.impl.network.neoforge;
 
 import com.misterpemodder.shulkerboxtooltip.impl.network.Payload;
 import com.misterpemodder.shulkerboxtooltip.impl.network.channel.Channel;
 import com.misterpemodder.shulkerboxtooltip.impl.network.context.MessageContext;
 import com.misterpemodder.shulkerboxtooltip.impl.network.message.MessageType;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-abstract class FabricChannel<T> implements Channel<T> {
+abstract class NeoForgeChannel<T> implements Channel<T> {
   protected final CustomPacketPayload.Type<Payload<T>> id;
   protected final MessageType<T> type;
-  protected final StreamCodec<RegistryFriendlyByteBuf, Payload<T>> codec;
+  protected final StreamCodec<FriendlyByteBuf, Payload<T>> codec;
   private boolean payloadTypeRegistered = false;
 
 
-  protected FabricChannel(ResourceLocation id, MessageType<T> type) {
+  protected NeoForgeChannel(ResourceLocation id, MessageType<T> type) {
     this.id = new CustomPacketPayload.Type<>(id);
     this.type = type;
     this.codec = StreamCodec.of(this::encodePayload, this::decodePayload);
@@ -35,11 +36,14 @@ abstract class FabricChannel<T> implements Channel<T> {
 
   @Override
   public void registerPayloadType() {
+    // payload registration is handled by the RegisterPayloadHandlersEvent
+  }
+
+  public void registerPayloadTypeDeferred(RegisterPayloadHandlersEvent event) {
     if (this.payloadTypeRegistered) {
       return;
     }
-    PayloadTypeRegistry.playC2S().register(this.id, this.codec);
-    PayloadTypeRegistry.playS2C().register(this.id, this.codec);
+    event.registrar("1").optional().commonBidirectional(this.id, this.codec, this::onReceive);
     this.payloadTypeRegistered = true;
   }
 
@@ -53,12 +57,13 @@ abstract class FabricChannel<T> implements Channel<T> {
     this.type.onUnregister(context);
   }
 
-  private void encodePayload(RegistryFriendlyByteBuf buf, Payload<T> message) {
+  private void encodePayload(FriendlyByteBuf buf, Payload<T> message) {
     this.type.encode(message.value(), buf);
   }
 
-  private Payload<T> decodePayload(RegistryFriendlyByteBuf buf) {
+  private Payload<T> decodePayload(FriendlyByteBuf buf) {
     return new Payload<>(this.id, this.type.decode(buf));
   }
 
+  protected abstract void onReceive(Payload<T> payload, IPayloadContext context);
 }

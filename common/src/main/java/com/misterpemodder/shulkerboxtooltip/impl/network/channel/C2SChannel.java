@@ -29,6 +29,7 @@ public interface C2SChannel<T> extends Channel<T> {
    *
    * @param message The message to send.
    */
+  @Environment(EnvType.CLIENT)
   void sendToServer(T message);
 
   /**

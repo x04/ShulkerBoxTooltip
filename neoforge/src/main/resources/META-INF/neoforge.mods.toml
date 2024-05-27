@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[40,)"
+loaderVersion = "[1,)"
 issueTrackerURL = "https://github.com/MisterPeModder/ShulkerBoxTooltip/issues"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/shulkerboxtooltip/"
 license = "MIT"
@@ -9,13 +9,22 @@ modId = "shulkerboxtooltip"
 version = "${version}"
 displayName = "ShulkerBoxTooltip"
 authors = "MisterPeModder"
-description = "What's in my shulker box?"
+description = "What''s in my shulker box?"
 logoFile = "icon.png"
 
+[[mixins]]
+config = "shulkerboxtooltip-common.mixins.json"
+
+[[mixins]]
+config = "shulkerboxtooltip-neoforge.mixins.json"
+
+[[accessTransformers]]
+file = "META-INF/accesstransformer.cfg"
+
 [[dependencies.shulkerboxtooltip]]
-modId = "forge"
+modId = "neoforge"
 mandatory = true
-versionRange = "[41.0.15,)"
+versionRange = "[20.6.0-beta,)"
 ordering = "NONE"
 side = "BOTH"
 
