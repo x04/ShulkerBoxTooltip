@@ -169,7 +169,7 @@ modrinth {
     token = System.getenv('MODRINTH_TOKEN')
     projectId = modrinthProjectId
     versionNumber = "${project.version}-neoforge"
-    versionName = "[Forge $project.mcVersionFull] v${project.version}"
+    versionName = "[NeoForge $project.mcVersionFull] v${project.version}"
     versionType = project.getReleaseType()
     changelog = rootProject.parseChangelog('changelog.txt')
     uploadFile = remapJar
