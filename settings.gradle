@@ -22,6 +22,6 @@ include('common')
 include('fabric')
 // Cloth config is missing, cannot enable forge
 // include('forge')
-include('neoforge')
+// include('neoforge')
 
 rootProject.name = 'ShulkerBoxTooltip'
